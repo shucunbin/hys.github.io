@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Spring Security 学习札记（三）：认证 | shucunbin&#39;s blog</title>
+  <meta name="description" content="支持的认证机制Spring Security  集成的主流认证机制包括：  表单认证 OAuth2.0 认证 HTTP Basic 认证 HTTP Digest 认证 OpenID 去中性化认证 RememberMe 自动认证 SAML 2.0 认证 CAS 认证 JAAS 认证 Pre-Authentication Scenarios 认证 X509 认证 自定义认证逻辑  关键概念及流程Aut">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Security 学习札记（三）：认证">
+<meta property="og:url" content="https://shucunbin.github.io/2021/11/14/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E8%AE%A4%E8%AF%81/index.html">
+<meta property="og:site_name" content="shucunbin&#39;s blog">
+<meta property="og:description" content="支持的认证机制Spring Security  集成的主流认证机制包括：  表单认证 OAuth2.0 认证 HTTP Basic 认证 HTTP Digest 认证 OpenID 去中性化认证 RememberMe 自动认证 SAML 2.0 认证 CAS 认证 JAAS 认证 Pre-Authentication Scenarios 认证 X509 认证 自定义认证逻辑  关键概念及流程Aut">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://thumbimg.dealmoon.com/dealmoon/7ef/fc3/4a4/061532f33222e1bdd60a807.jpg">
+<meta property="og:image" content="https://thumbimg.dealmoon.com/dealmoon/325/61d/58b/2b6f4481e468d79eb9660e6.jpg">
+<meta property="article:published_time" content="2021-11-14T09:30:15.000Z">
+<meta property="article:modified_time" content="2022-01-29T07:01:59.552Z">
+<meta property="article:author" content="shucunbin">
+<meta property="article:tag" content="Spring Security">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://thumbimg.dealmoon.com/dealmoon/7ef/fc3/4a4/061532f33222e1bdd60a807.jpg">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://shucunbin.github.io/2021/11/14/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E8%AE%A4%E8%AF%81/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="shucunbin&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>尝试理顺一些常用的知识点～</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java-%E5%9F%BA%E7%A1%80/">Java 基础</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Netty/">Netty</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring-Cloud/">Spring Cloud</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring-Security/">Spring Security</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-8/" rel="tag">Java 8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Security/" rel="tag">Spring Security</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/" rel="tag">事件循环</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" rel="tag">线程模型</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Java-8/" style="font-size: 13px;">Java 8</a> <a href="/tags/Spring-Security/" style="font-size: 14px;">Spring Security</a> <a href="/tags/%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/" style="font-size: 13px;">事件循环</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 13px;">分布式</a> <a href="/tags/%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" style="font-size: 13px;">线程模型</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Spring-Security/">Spring Security</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/14/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E8%AE%A4%E8%AF%81/" class="title">Spring Security 学习札记（三）：认证</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-14T09:30:15.000Z" itemprop="datePublished">2021-11-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Spring-Security/">Spring Security</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/13/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E7%99%BB%E9%99%86%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE/" class="title">Spring Security 学习札记（二）：登陆用户数据</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-13T09:30:15.000Z" itemprop="datePublished">2021-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Spring-Security/">Spring Security</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/12/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" class="title">Spring Security 学习札记（一）：基本概念</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-12T09:30:15.000Z" itemprop="datePublished">2021-11-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Spring-Cloud/">Spring Cloud</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/08/20/Spring%20Cloud%20%E4%B9%8B%E8%BF%9C%E7%A8%8B%E8%B0%83%E7%94%A8/" class="title">Spring Cloud 之 远程调用</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-08-20T07:12:10.000Z" itemprop="datePublished">2021-08-20</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Netty/">Netty</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/11/12/Netty%20%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B9%8B%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/" class="title">Netty 前置知识点之事件循环机制</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-12T02:23:10.000Z" itemprop="datePublished">2020-11-12</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">支持的认证机制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">关键概念及流程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.1.</span> <span class="toc-text">Authentication</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.2.</span> <span class="toc-text">SecurityContextHolder</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.3.</span> <span class="toc-text">AuthenticationManager</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">2.3.1.</span> <span class="toc-text">全局 ProviderManager 与 局部 ProviderManager 的配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.4.</span> <span class="toc-text">AbstractAuthenticationProcessingFilter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.5.</span> <span class="toc-text">RememberMe</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">2.5.1.</span> <span class="toc-text">持久化令牌</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">2.5.2.</span> <span class="toc-text">二次校验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">2.5.3.</span> <span class="toc-text">原理关键 API</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.6.</span> <span class="toc-text">会话管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">2.6.1.</span> <span class="toc-text">会话并发管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">2.6.2.</span> <span class="toc-text">原理关键 API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">2.6.3.</span> <span class="toc-text">会话固定攻击与防御</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">2.6.4.</span> <span class="toc-text">会话共享</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">参考文章</span></a></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Spring Security 学习札记（三）：认证" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Spring Security 学习札记（三）：认证
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/11/14/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E8%AE%A4%E8%AF%81/" class="article-date">
+	  <time datetime="2021-11-14T09:30:15.000Z" itemprop="datePublished">2021-11-14</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Spring-Security/">Spring Security</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Spring-Security/" rel="tag">Spring Security</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/11/14/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E8%AE%A4%E8%AF%81/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 3.3k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 11(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1><span id="支持的认证机制">支持的认证机制</span></h1><p>Spring Security  集成的主流认证机制包括：</p>
+<ul>
+<li>表单认证</li>
+<li>OAuth2.0 认证</li>
+<li>HTTP Basic 认证</li>
+<li>HTTP Digest 认证</li>
+<li>OpenID 去中性化认证</li>
+<li>RememberMe 自动认证</li>
+<li>SAML 2.0 认证</li>
+<li>CAS 认证</li>
+<li>JAAS 认证</li>
+<li>Pre-Authentication Scenarios 认证</li>
+<li>X509 认证</li>
+<li>自定义认证逻辑</li>
+</ul>
+<h1><span id="关键概念及流程">关键概念及流程</span></h1><p>Authentication、AuthenticationProvider、AuthenticationManager（实现类为 ProviderManager）。<br>在一次完整的认证流程中，可能会同时存在多个 AuthenticationProvider，多个 AuthenticationProvider 统一由 ProviderManager 来管理。同时 ProviderManager 具有一个 parent，它是一个备选认证方式，当所有认证都失败了，就由 parent 出场收拾残局。</p>
+<h2><span id="authentication">Authentication</span></h2><p>Authentication 对象主要有两方面的功能：</p>
+<ul>
+<li>作为 AuthenticationManager 的输入参数，提供用户认证的凭证，当它作为一个输入参数时，它的 isAuthenticated 方法返回 false，表示用户还未认证。</li>
+<li>代表已经经过身份认证的用户，此时的 Authentication 可以从 SecurityContext 中获取。</li>
+</ul>
+<p>一个 Authentication 对象主要包含三个方面的信息：</p>
+<ul>
+<li>principal：定义认证的用户，如果用户使用用户名/密码的方式登陆，principal 通常就是一个 UserDetails 对象；</li>
+<li>credentials：登陆凭证，一般就是指密码。当用户登陆成功之后，登陆凭证会被自动擦除，以防止泄漏；</li>
+<li>authorities：用户被授予的权限信息。</li>
+</ul>
+<p>常见的 Authentication 实现类：</p>
+<table>
+<thead>
+<tr>
+<th>类名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AbstractAuthenticationToken</td>
+<td>实现了 Authentication、CredentialsContainer 两个接口，其中 CredentialsContainer 提供了登陆凭证擦除方法。一般登陆成功后，为了防止用户信息泄漏，可以将登陆凭证擦除。</td>
+</tr>
+<tr>
+<td>RememberMeAuthenticationToken</td>
+<td>使用 RememberMe 登陆时，存储登陆信息</td>
+</tr>
+<tr>
+<td>TestingAuthenticationToken</td>
+<td>单元测试时封装的用户对象</td>
+</tr>
+<tr>
+<td>AnonymousAuthenticationToken</td>
+<td>匿名登录时封装用户对象</td>
+</tr>
+<tr>
+<td>RunAsUserToken</td>
+<td>替换验证身份时封装的用户对象</td>
+</tr>
+<tr>
+<td>UsernamePasswordAuthenticationToken</td>
+<td>表单登陆时封装的用户对象</td>
+</tr>
+<tr>
+<td>JaasAuthenticationToken</td>
+<td>JAAS 认证时封装的用户对象</td>
+</tr>
+<tr>
+<td>PreAuthenticatedAuthenticationToken</td>
+<td>Pre-Authentication 场景下封装的用户对象</td>
+</tr>
+</tbody></table>
+<h2><span id="securitycontextholder">SecurityContextHolder</span></h2><p>SecurityContextHolder 中存储的是 SecurityContext，SecurityContext 中存储的是 Authentication。SecurityContext 的存储方式由 SecurityContextHolderStrategy 决定，目前存在三种类型的 SecurityContextHolderStrategy，分别为：</p>
+<ul>
+<li>ThreadLocalSecurityContextHolderStrategy （默认）</li>
+<li>InheritableThreadLocalSecurityContextHolderStrategy</li>
+<li>GlobalSecurityContextHolderStrategy</li>
+</ul>
+<p>还有一个 与SecurityContext 相关的重要过滤器  <code> SecurityContextPersistenceFilter</code>，它的作用是为了存储 SecurityContext 而设计的，主要做两件事情：</p>
+<ul>
+<li>请求来的时候，从 HttpSession 中获取 SecurityContext 并存例入 SecurityContextHolder 中，这样在同一个请求的后续处理过程中，开发者始终可以通过 SecurityContextHolder 获取当前登陆用户信息。</li>
+<li>当一个请求处理完毕时，从 SecurityContextHolder 中获取 SecurityContext 并存入 HttpSession 中（主要针对异步 Servlet），方便下一个请求到来时，再从 HttpSession 中拿出来使用，同时擦除 SecurityContextHolder 中的登陆用户信息。</li>
+</ul>
+<p>上述两部操作均有 <code>SecurityContextRepository</code> 接口完成，它的三个实现类为：</p>
+<ul>
+<li>NullSecurityContextRepository（什么都没做）</li>
+<li>TestSecurityContextRepository（为单元测试提供支持）</li>
+<li>HttpSessionSecurityContextRepository（默认）</li>
+</ul>
+<h2><span id="authenticationmanager">AuthenticationManager</span></h2><p>AuthenticationManager 是一个认证管理器，它定义了 Spring Security 过滤器要如何执行认证操作。AuthenticationManager 在认证成功后，会返回一个 Authentication 对象，这个 Authentication 对象会被设置到 SecurityContextHolder 中。</p>
+<p>ProviderManager  是 AuthenticationManager 的一个重要实现类。ProviderManager 和 AuthenticationProvider 之间的关系如下图：<br><img src="https://thumbimg.dealmoon.com/dealmoon/7ef/fc3/4a4/061532f33222e1bdd60a807.jpg"><br>多个 AuthenticationProvider 将组成一个列表，这个列表将由 ProviderManager 代理，换而言之，在 ProviderManager 中存在一个 AuthenticationProvider 列表，在 ProviderManager 中遍历列表中的每一个 AuthenticationProvider 去执行身份认证，最终得到认证结果。<br>ProviderManager 本身也可以再配置一个 AuthenticationProvider 作为 parent，这样当 ProviderManager 失败之后，就可以进入 parent 中再次进行认证。ProviderManager 的 parent 可以是任意类型的 AuthenticationManager。<br>ProviderManager 本身也可以有多个，多个 ProviderManager 共用一个 parent，当存在多个过滤器链的时候非常有用。当存在多个过滤器链时，不同的路径可能对应不同的认证方式，但是不同路径可能又会同时存在一些共有的认证方式，这些共有的认证方式可以在 parent 中统一处理。</p>
+<h3><span id="全局-providermanager-与-局部-providermanager-的配置">全局 ProviderManager 与 局部 ProviderManager 的配置</span></h3><p>一个系统中，我们可以配置多个 HttpSecurity，而mei每一个HttpSecurity 都有一个对应的 AuthenticationManager，我们暂且称这种 AuthenticationManager 为局部 AuthenticationManager，这些局部的 AuthenticationManager 实例都有一个共同的 parent，那就是全局的 AuthenticationManager。<br>待补充</p>
+<h2><span id="abstractauthenticationprocessingfilter">AbstractAuthenticationProcessingFilter</span></h2><p>作为 Spring Security 过滤器链中的一环，<code>AbstractAuthenticationProcessingFilter</code> 将 Authentication、AuthenticationManager（ProviderManager）、AuthenticationProvider 这些组件与登陆关联起来，它可以用来处理任何提交给它的身份认证。下图是 <code>AbstractAuthenticationProcessingFilter</code> 在整个通用架构中所处的位置：<br><img src="https://thumbimg.dealmoon.com/dealmoon/325/61d/58b/2b6f4481e468d79eb9660e6.jpg"></p>
+<p><code>AbstractAuthenticationProcessingFilter</code> 作为一个抽象类，使用不同的方式登陆，对应不同的实现类。比如，如果使用用户名/密码的方式登陆，那么它对应的实现类是 <code>UsernamePasswordAuthenticationFilter</code>，构造出来的 Authentication 对象则是 <code>UsernamePasswordAuthenticationToken</code>。其大致流程如下：</p>
+<ul>
+<li>当用户提交登陆请求时，UsernamePasswordAuthenticationFilter 会从当前请求 HttpServletRequest 中提取出登陆用户名/密码，然后创建出一个 UsernamePasswordAuthenticationToken 对象。</li>
+<li>UsernamePasswordAuthenticationToken 对象将被传入 ProviderManager 中进行具体的认证操作。</li>
+<li>如果认证失败，则 SecurityContextHolder 中相关信息将被清除，登陆失败回调也会被调用。</li>
+<li>如果认证成功，则会进行登陆信息存储、Session 并发处理、登陆成功事件发布以及登陆成功方法回调等。</li>
+</ul>
+<h2><span id="rememberme">RememberMe</span></h2><p>RememberMe 是一种服务器端的行为，具体的思路就是通过 Cookie 来记录当前用户身份。当用户登陆成功后，会通过一定的算法，将用户信息、时间戳等进行加密，加密完成后，通过响应头带回前端存储在 Cookie 中，当浏览器关闭之后重新打开，如果再次访问该网站，会自动将 Cookie 中的信息发送给服务器，服务器对 Cookie 中的信息进行校验分析，进而确定用户身份。</p>
+<p>为了提高普通令牌的安全性，在其基础上的改进方案包括：持久化令牌、二次校验</p>
+<h3><span id="持久化令牌">持久化令牌</span></h3><p>在普通令牌的基础上，新增了 series 和 token 两个校验参数，当使用用户名/密码的方式登陆时，series 才会自动更新，而一旦有了新的会话，token 就会重新生成。所以，如果令牌被别人盗用，对方使用 RememberMe 登陆成功后，就会生成新的 token，你自己的登陆令牌就会失效，这样就能及时发现账户泄漏并作出处理，比如清除自动登陆令牌、通知账户泄漏等。<br>建立新会话的场景：关闭浏览器再重新打开、重启服务器</p>
+<h3><span id="二次校验">二次校验</span></h3><p>二次校验就是将系统中的资源分为敏感的和不敏感的，如果用户使用了 RememberMe 的方式登陆，这访问敏感资源时会自动跳转到登陆页面，要求用户重新登陆；如果使用了用户名/密码的方式登陆，则可以访问所有资源。这种方式相当于牺牲了一点用户体验换取系统安全性。</p>
+<h3><span id="原理关键-api">原理关键 API</span></h3><ul>
+<li>RememberMeServices，定义自动登陆逻辑、设置 cookie 逻辑</li>
+<li>RememberMeConfigurer，开启 RememberMe 功能的配置类，init() 方法中集成了 RememberMeServices、RememberMeAuthenticationProvider，configure() 方法中配置了 RememberAuthenticationFilter。</li>
+<li>RememberMeAuthenticationFilter，将 RememberMe 功能集成到系统的 Filter。</li>
+<li>RememberMeAuthenticationToken，RememberMeAuthenticationProvider 认证成功后返回的 Authentication 实现类。</li>
+</ul>
+<blockquote>
+<p>什么是 HttpOnly？<br>如果 cookie 中设置了 HttpOnly 属性，那么 JS 脚步将无法读取到 cookie 信息，这样能有效防止 XSS 攻击，获取 cookie 内容。XSS 全称 Cross SiteScript，跨站脚本攻击，是 Web 程序中常见的漏洞，XSS 属于被动式且用于客户端的攻击方式，其原理是攻击者向有 XSS 漏洞的网站中输入恶意的 HTML 代码，当其它用户浏览该网站时，这段 HTML 代码会自动执行，从而达到攻击的目的，如盗取用户 Cookie、破坏页面结构、重定向到其它网站等。</p>
+</blockquote>
+<h2><span id="会话管理">会话管理</span></h2><p>当浏览器调用登陆接口成功后，服务器端会和浏览器之间建立一个会话（Session），浏览器在每次发送请求时都会携带一个 sessionId通过 cookie或 url 重写），服务端则根据这个 sessionId 来确定用户的身份。当浏览器关闭后，服务端的 Session 并不会自动销毁，需要开发者手动在服务端调用 Session 销毁方法，或者等 Session 过期自动销毁。</p>
+<h3><span id="会话并发管理">会话并发管理</span></h3><p>会话并发管理就是在当前系统中，同一个用户可以同时创建多少个会话，如果一台设备对应一个会话，那么也可以简单理解为同一个用户可以同时在多少台设备进行登陆。默认情况下，同一用户在多少台设备上登陆并没有限制，开发者可执行配置。</p>
+<p>通过配置可以实现相同的用户同时只可以登陆一台设备：相互踢或者禁止后面的设备登陆。</p>
+<h3><span id="原理关键-api">原理关键 API</span></h3><ul>
+<li>SessionInformation，记录 Spring Security 框架内的会话信息。</li>
+<li>SessionRegistry，用来维护 SessionInformation 实例</li>
+<li>SessionAuthenticationStrategy，用作在用户登陆成功后，对 HttpSession 进行处理，它有很多作用各异的实现类。<ul>
+<li>CsrfAuthenticationStrategy，与 CSRF 攻击有关，该类主要负责在身份验证后删除旧的 CstfToken 并生成一个新的 CsrfToken；</li>
+<li>ConcurrentSessionControlAuthenticationStrategy，处理 Session 并发问题；</li>
+<li>RegisterSessionAuthenticationStrategy，用于在认证成功后将 HttpSession 信息记录到 SessionRegistry 中；</li>
+<li>CompositeSessionAuthenticationStrategy，复合策略，Spring Security 使用的就是该类的实例；</li>
+<li>NullAuthenticationSessionStrategy：空实现；</li>
+<li>AbstractSessionFixationProtectionStrategy：处理会话固定攻击的基类；</li>
+<li>ChangeSessionIdAuthenticationStrategy：通过修改 sessionId 来防止会话攻击；</li>
+<li>SessionFixationProtectionStrategy：通过创建一个新的会话来防止会话固定攻击。</li>
+</ul>
+</li>
+<li>SessionManagementFilter，用来处理 RememberMe 登陆时的会话管理，即如果用户使用了 RememberMe 的方式进行认证，则认证成功后需要进行会话管理，相关的管理操作通过 SessionManagementFilter 过滤器触发。</li>
+<li>ConcurrentSessionFilter，处理会话并发管理</li>
+<li>SessionManagementConfigurer，完成 SessionManagementFilter、ConcurrentSessionFilter 的配置。</li>
+<li>AbstractAuthenticationProcessingFilter，认证成功后，调用 sessionStrategy 的 onAuthentication方法</li>
+</ul>
+<p>整个流程总结：用户通过用户名／密码发起一个认证请求，当认证成功后，在 AbstractAuthenticationProcessingFilter#doFilter方法中触发了Session并发管理。默认的 sessionStrategy是Composite SessionAuthenticationStrategy，它一共代理了三个 SessionAuthenticationStrategy，分别是ConcurrentSessionControlAuthenticationStrategy、ChangeSessionIdAuthenticationStrategy以及RegisterSessionAuthenticationStrategy。当前请求在这三个SessionAuthenticationStrategy中分别走一圈，第一个用来判断当前登录用户的Session数是否已经超出限制，如果超出限制就根据配置好的规则作出处理；第二个用来修改sessionId（防止会话固定攻击）；第三个用来将当前Session注册到SessionRegistry中。使用用户名／密码的方式完成认证，将不会涉及ConcurrentSessionFilter和SessionManagementFilter两个过滤器。如果用户使用了RememberMe的方式来进行身份认证，则会通过SessionManagementFilter#doFilter方法触发Session并发管理。当用户认证成功后，以后的每一次请求都会经过ConcurrentSessionFilter，在该过滤器中，判断当前会话是否已经过期，如果过期就执行注销登录流程；如果没有过期，则更新最近一次请求时间。</p>
+<h3><span id="会话固定攻击与防御">会话固定攻击与防御</span></h3><p>会话固定攻击（Session fixation attacks）是一种潜在的风险，恶意攻击者有可能通过访问当前应用程序创建会话，然后诱导用户<strong>以相同的会话 ID 登陆</strong>，通常是将会话ID作为参数放在请求链接中，然后诱导用户去点击，进而获取用户的登陆身份。</p>
+<p>三个方面入手防范会话固定攻击：</p>
+<ul>
+<li>Spring Security 中默认自带了 Http 防火墙，如果 sessionid 放在地址栏中，这个请求就会直接被拦截下来；</li>
+<li>在 Http 响应的 set-cookie 字段中设置 httpOnly 属性，避免通过 XSS 攻击来获取包含sessionid 的 Cookie 信息；</li>
+<li>用户登陆成功后，改变会话 sessionid，Spring Security 默认实现来该种方案。</li>
+</ul>
+<h3><span id="会话共享">会话共享</span></h3><p>集群环境下的会话共享解决方案：</p>
+<ul>
+<li>Session 复制：多个服务之间互相复制 session 信息，这样每个服务中都包含来所有的 session 信息，Tomcat 通过 IP 组播对这种方案提供支持。但是这种方案占用宽带、有时延，服务数量越多效率越低，所以这种方案使用较少；</li>
+<li>Session 粘滞：也叫会话保持，就是在 Nginx 上通过一致性 Hash，将 Hash 结果相同的请求总是分发到一个服务上去。这种方案可以解决一部分集群会话带来的问题，但是无法解决集群中的会话并发管理问题。</li>
+<li>Session 共享：Session 共享就是将不同服务的会话统一放在一个地方，所有的服务共享一个会话。一般使用redis 等key-value 数据库存储 session。</li>
+</ul>
+<p>使用 redis 维护 session 的信息关键类是 spring-session 的 SessionRepositoryFilter。</p>
+<h1><span id="参考文章">参考文章</span></h1><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zongmin/p/13783348.html">session 会话管理</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/54chensongxia/p/12096493.html">@EnableRedisHttpSession原理简析</a></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://shucunbin.github.io/2021/11/14/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E8%AE%A4%E8%AF%81/" title="Spring Security 学习札记（三）：认证" target="_blank" rel="external">https://shucunbin.github.io/2021/11/14/Spring Security 学习札记（三）：认证/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2021/11/13/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E7%99%BB%E9%99%86%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE/" title="Spring Security 学习札记（二）：登陆用户数据"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+    <script defer>
+    var disqus_config = function () {
+        
+            this.page.url = 'https://shucunbin.github.io/2021/11/14/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E8%AE%A4%E8%AF%81/';
+        
+        this.page.identifier = 'Spring Security 学习札记（三）：认证';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + '' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+
+
+
+
+</body>
+</html>
