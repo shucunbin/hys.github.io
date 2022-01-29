@@ -17,21 +17,21 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>Netty 前置知识点之 Reactor 反应器模式 | shucunbin&#39;s blog</title>
-  <meta name="description" content="概要Reactor 反应器模式是高性能网络编程在设计和架构层面的基础模式。很多服务器软件或者中间件都是基于反应器模式实现的，如 Ngnix Web 服务器、Redis、Netty等，只有掌握了它，才能真正理解掌握  Nginx、Redis、Netty 这些中间件技术。总之，反应器模式是高性能网络编程的必知必会的模式。 什么是 Reactor 反应器模式Doug Lea 在 文章 Scalable">
+  <title>Spring Security 学习札记（二）：登陆用户数据 | shucunbin&#39;s blog</title>
+  <meta name="description" content="保存登陆用户如果使用 Spring Security 这一类安全管理框架，大部分的开发者可能会将登陆用户数据保存在 Session 中，事实上，Spring Security 也是这么做的，并在此基础上做了一些改进，其中最主要的一个变化就是线程绑定。当用户登陆成功后，Spring Security 会将登陆成功的用户信息保存到 SecurityContextHolder 中，SecurityCon">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Netty 前置知识点之 Reactor 反应器模式">
-<meta property="og:url" content="https://shucunbin.github.io/2020/11/11/Netty%20%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B9%8B%20Reactor%20%E5%8F%8D%E5%BA%94%E5%99%A8%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:title" content="Spring Security 学习札记（二）：登陆用户数据">
+<meta property="og:url" content="https://shucunbin.github.io/2021/11/13/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E7%99%BB%E9%99%86%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE/index.html">
 <meta property="og:site_name" content="shucunbin&#39;s blog">
-<meta property="og:description" content="概要Reactor 反应器模式是高性能网络编程在设计和架构层面的基础模式。很多服务器软件或者中间件都是基于反应器模式实现的，如 Ngnix Web 服务器、Redis、Netty等，只有掌握了它，才能真正理解掌握  Nginx、Redis、Netty 这些中间件技术。总之，反应器模式是高性能网络编程的必知必会的模式。 什么是 Reactor 反应器模式Doug Lea 在 文章 Scalable">
+<meta property="og:description" content="保存登陆用户如果使用 Spring Security 这一类安全管理框架，大部分的开发者可能会将登陆用户数据保存在 Session 中，事实上，Spring Security 也是这么做的，并在此基础上做了一些改进，其中最主要的一个变化就是线程绑定。当用户登陆成功后，Spring Security 会将登陆成功的用户信息保存到 SecurityContextHolder 中，SecurityCon">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-11-11T09:44:15.000Z">
-<meta property="article:modified_time" content="2022-01-29T02:47:58.857Z">
+<meta property="article:published_time" content="2021-11-13T09:30:15.000Z">
+<meta property="article:modified_time" content="2022-01-29T06:57:42.266Z">
 <meta property="article:author" content="shucunbin">
-<meta property="article:tag" content="线程模型">
+<meta property="article:tag" content="Spring Security">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://shucunbin.github.io/2020/11/11/Netty%20%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B9%8B%20Reactor%20%E5%8F%8D%E5%BA%94%E5%99%A8%E6%A8%A1%E5%BC%8F/index.html">
+  <link rel="canonical" href="https://shucunbin.github.io/2021/11/13/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E7%99%BB%E9%99%86%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE/index.html">
   
     <link rel="alternate" href="/atom.xml" title="shucunbin&#39;s blog" type="application/atom+xml">
   
@@ -285,21 +285,21 @@
   <div class="slimContent">
     <nav id="toc" class="article-toc">
       <h3 class="toc-title">文章目录</h3>
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">概要</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">什么是 Reactor 反应器模式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">Reactor 反应器模式的演进</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.1.</span> <span class="toc-text">Connection Per Thread 模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.2.</span> <span class="toc-text">单线程 Recator 反应器模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.3.</span> <span class="toc-text">多线程 Recator 反应器模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.4.</span> <span class="toc-text">主从多线程的 Reactor 反应器模式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">小结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">4.1.</span> <span class="toc-text">反应器模式和生产者消费者模式对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">4.2.</span> <span class="toc-text">反应器模式优缺点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">保存登陆用户</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">获取登陆用户</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.1.</span> <span class="toc-text">从 SecurityContextHolder 中获取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">2.1.1.</span> <span class="toc-text">Authentication</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">2.1.2.</span> <span class="toc-text">SecurityContextHolder</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.2.</span> <span class="toc-text">从当前请求对象中获取</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">定义登陆用户的其它方式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.1.</span> <span class="toc-text">基于内存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.2.</span> <span class="toc-text">基于 JdbcUserDetailsManager</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.3.</span> <span class="toc-text">基于 MyBatis</span></a></li></ol></li></ol>
     </nav>
   </div>
 </aside>
 
 <main class="main" role="main">
   <div class="content">
-  <article id="post-Netty 前置知识点之 Reactor 反应器模式" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-Spring Security 学习札记（二）：登陆用户数据" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
       
         
   
     <h1 class="article-title" itemprop="name">
-      Netty 前置知识点之 Reactor 反应器模式
+      Spring Security 学习札记（二）：登陆用户数据
     </h1>
   
 
@@ -307,20 +307,20 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2020/11/11/Netty%20%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B9%8B%20Reactor%20%E5%8F%8D%E5%BA%94%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="article-date">
-	  <time datetime="2020-11-11T09:44:15.000Z" itemprop="datePublished">2020-11-11</time>
+	<a href="/2021/11/13/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E7%99%BB%E9%99%86%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE/" class="article-date">
+	  <time datetime="2021-11-13T09:30:15.000Z" itemprop="datePublished">2021-11-13</time>
 	</a>
 </span>
         
   <span class="article-category">
     <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/Netty/">Netty</a>
+    <a class="article-category-link" href="/categories/Spring-Security/">Spring Security</a>
   </span>
 
         
   <span class="article-tag">
     <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" rel="tag">线程模型</a>
+	<a class="article-tag-link-link" href="/tags/Spring-Security/" rel="tag">Spring Security</a>
   </span>
 
 
@@ -333,52 +333,101 @@
 	</span>
 
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/11/11/Netty%20%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B9%8B%20Reactor%20%E5%8F%8D%E5%BA%94%E5%99%A8%E6%A8%A1%E5%BC%8F/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/11/13/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E7%99%BB%E9%99%86%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE/#comments" class="article-comment-link">评论</a></span>
         
 	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.7k(字)</span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.4k(字)</span>
 	
 	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 6(分)</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 4(分)</span>
 	
 
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h1><span id="概要">概要</span></h1><p>Reactor 反应器模式是高性能网络编程在设计和架构层面的基础模式。很多服务器软件或者中间件都是基于反应器模式实现的，如 Ngnix Web 服务器、Redis、Netty等，只有掌握了它，才能真正理解掌握  Nginx、Redis、Netty 这些中间件技术。总之，反应器模式是高性能网络编程的必知必会的模式。</p>
-<h1><span id="什么是-reactor-反应器模式">什么是 Reactor 反应器模式</span></h1><p>Doug Lea 在 文章 <a target="_blank" rel="noopener" href="http://gee.cs.oswego.edu/dl/cpjslides/nio.pdf">Scalable IO in Java</a> 中对反应器模式的定义：反应器模式由 Reactor 反应器线程、Handlers 处理器两大角色组成：</p>
+        <h1><span id="保存登陆用户">保存登陆用户</span></h1><p>如果使用 Spring Security 这一类安全管理框架，大部分的开发者可能会将登陆用户数据保存在 Session 中，事实上，Spring Security 也是这么做的，并在此基础上做了一些改进，其中最主要的一个变化就是线程绑定。<br>当用户登陆成功后，Spring Security 会将登陆成功的用户信息保存到 SecurityContextHolder 中，SecurityContextHolder 中的数据保存默认是通过 ThreadLocal 来实现的，使用 ThreadLocal 创建的变量只能被当前线程访问，不能被其它线程访问和修改，也就是用户数据和请求线程绑定在一起。当登陆请求处理完毕后，Spring Security 会将 SecurityContextHolder 中的数据拿出来保存到 Session 中，同时将 SecurityContextHolder 中的数据清空。以后每当有请求到来时，Spring Security 就会从 Session 中取出用户登陆数据，保存到 SecurityContextHolder 中，方便在该请求的后续护理过程中使用，同时在请求结束时将 SecurityContextHolder 中的数据拿出来保存到 session 中，然后将 SecurityContextHolder 的数据清空。<br>这种策略在子线程中想要获取用户登陆数据时比较麻烦，Spring Security 对此也提供来相应的解决方案，如果开发者使用 <code>@Async</code> 注解来开启异步任务的话，那么只需要添加如下配置，使用 Spring Security 提供的异步任务代理，就可以在异步任务中从 SecurityContextHolder 里边获取当前登陆用户的信息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationConfiguration</span> <span class="keyword">extends</span> <span class="title">AsyncConfigurerSupport</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Executor <span class="title">getAsyncExecutor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> DelegatingSecurityContextExecutorService(Executors.newFixedThreadPool(<span class="number">5</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1><span id="获取登陆用户">获取登陆用户</span></h1><p>登陆用户获取主要分为两种方式：</p>
 <ul>
-<li>Reactor 反应器线程的职责 - 负责响应 IO 事件，并且分发到 Handlers 处理器；</li>
-<li>Handlers 处理器的职责：非阻塞的执行业务处理逻辑。</li>
+<li>从 SecurityContextHolder 中获取</li>
+<li>从当前请求对象中获取</li>
 </ul>
-<h1><span id="reactor-反应器模式的演进">Reactor 反应器模式的演进</span></h1><h2><span id="connection-per-thread-模式">Connection Per Thread 模式</span></h2><p>Connection Per Thread，顾名思义，即对于每一个新的网络连接都分配一个线程，每个线程独立处理自己负责的输入和输出。当然，服务器的监听线程也是独立的，任何 socket 连接的输入和输出处理，不会阻塞后面新来连接的监听和建立。</p>
-<p>Connection Per Thread 模式的优点是解决了前面的新连接被严重阻塞的问题，在一定程度上，极大地提高了服务器的吞吐量。<br>Connection Per Thread 模式的缺点是：对应于大量的连接，需要耗费大量的线程资源，在操作系统中，线程的创建、销毁、切换都需要不菲的代价。因此，在高并发的应用场景下，这种模式的缺陷是致命的。</p>
-<h2><span id="单线程-recator-反应器模式">单线程 Recator 反应器模式</span></h2><p>为了解决 Connection Per Thread 模式的缺陷，我们使用 Reactor 反应器模式对线程的数量进行控制，做到<strong>一个线程处理大量的连接</strong>。<br>前面已经提到，在反应器模式中，有 Reactor 反应器和 Handler 处理器两个重要的组件：</p>
+<h2><span id="从-securitycontextholder-中获取">从 SecurityContextHolder 中获取</span></h2><h3><span id="authentication">Authentication</span></h3><p>登陆用户信息使用 Authentication 对象表示，Authentication 对象主要有两方面的功能：</p>
 <ul>
-<li>Reactor 反应器：负责查询 IO 事件，当检测到一个 IO 事件，将其发送给相应的 Handler 处理器去处理。<strong>这里的 IO 事件，就是 NIO 中选择器监控的通道 IO 事件</strong>。</li>
-<li>Handler 处理器：与 IO 事件（或者选择键）绑定，负责 IO 事件的处理。<strong>完成真正的连接建立、通道数据的读取、处理业务逻辑、负责将结果写出到通道等</strong>。</li>
+<li>作为 AuthenticationManager 的输入参数，提供用户认证的凭证，当它作为一个输入参数时，它的 isAuthenticated 方法返回 false，表示用户还未认证。</li>
+<li>代表已经经过身份认证的用户，此时的 Authentication 可以从 SecurityContext 中获取。</li>
 </ul>
-<p>单线程 Reactor 反应器模式 指的是 Reactor 反应器和 Handlers 处理器处于一个线程中执行，它是最简单的反应器模型。基于 Java NIO 实现单线程  Reactor 反应器模式的核心 API 是类 SelectionKey 的以下两个方法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">attach</span><span class="params">(Object o)</span></span>;</span><br><span class="line"><span class="function">Object <span class="title">attachment</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
-<p>其中，Handler 处理器实例将作为附件添加到 SelectionKey 实例中，当 IO 事件发生时，选择键被 select() 方法选到后，可以直接将事件处理器实例从附件取出，然后调用方法完成相应的处理。</p>
-<p>单线程 Reactor反应器模式的缺点：<br>单线程 Reactor 反应器模式，是基于 Java 的 NIO 实现的，相对于传统的多线程 OIO，反应器模式不再需要启动很多线程，取而代之，Reactor 反应器和 Handler 处理器执行在同一条线程上，这样，带来了一个问题，<strong>当其中某个 Handler 阻塞时，会导致其它所有的 Handler 都得不到执行。在这种场景下，如果被阻塞的 Handler 不仅仅负责输入和输出处理的业务，还包括负责连接监听的 AcceptHandler 处理器，这个是非常严重的问题。一旦 AcceptHandler 处理器阻塞，会导致整个服务不能接收新的连接，使得服务器变得不可用。</strong>正因如此，在高性能服务器应用场景中，单线程反应器模式实际使用的很少。</p>
-<h2><span id="多线程-recator-反应器模式">多线程 Recator 反应器模式</span></h2><p>针对单线程  Reactor 反应器的缺点，使用多线程，对基础反应器模式进行改造升级，即将负责输入输出的 Handler 处理器执行，放入独立的线程池中。这样，业务处理线程与负责监听和 IO 事件查询的反应器线程相互隔离，避免服务器的连接监听受到阻塞。<br>理论上，这种模式依然有一个地方是单点的，那就是处理客户端连接的线程。因为大多数服务端应用或多或少在连接时都会处理一些业务，如鉴权之类的，当连接的客户端越来越多时这一个线程依然会存在性能问题。</p>
-<h2><span id="主从多线程的-reactor-反应器模式">主从多线程的 Reactor 反应器模式</span></h2><p>这种模式是在多线程 Reactor 反应器模式的基础上，将 Reactor 反应器拆分为多个子反应器线程，每一个 SubReactor 子线程负责一个选择器。这样可以充分使用系统处理能力，提高反应器管理连接的数量，提升选择大量通道的能力。</p>
-<h1><span id="小结">小结</span></h1><h2><span id="反应器模式和生产者消费者模式对比">反应器模式和生产者消费者模式对比</span></h2><p>相似之处：在一定程度上，反应器模式有点类似生产者消费者模式。在生产者消费者模式中，一个或多个生产者将事件加入到一个队里中，一个或多个消费者主动地从这个队列中提取事件来处理。<br>不同之处：反应器模式是<strong>基于查询</strong>的，没有专门的队列去缓冲存储 IO 事件，查询到 IO 事件之后，反应器会根据不同 IO 选择键（事件）将其分发给对应的 Handler 处理。</p>
-<h2><span id="反应器模式优缺点">反应器模式优缺点</span></h2><p>反应器模式优点：</p>
+<p>一个 Authentication 对象主要包含三个方面的信息：</p>
 <ul>
-<li>响应快，虽然同一反应器线程本身是同步的，但不会被单个连接的同步 IO 所阻塞；</li>
-<li>编程相对简单，最大程度避免了复杂的多线程同步，也避免了多线程的切换的开销；</li>
-<li>可扩展，可以方便地通过增加反应器线程的个数来充分利用 CPU 资源；</li>
+<li>principal：定义认证的用户，如果用户使用用户名/密码的方式登陆，principal 通常就是一个 UserDetails 对象；</li>
+<li>credentials：登陆凭证，一般就是指密码。当用户登陆成功之后，登陆凭证会被自动擦除，以防止泄漏；</li>
+<li>authorities：用户被授予的权限信息。</li>
 </ul>
-<p>反应器模式缺点：</p>
+<p>常见的 Authentication 实现类：</p>
+<table>
+<thead>
+<tr>
+<th>类名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AbstractAuthenticationToken</td>
+<td>实现了 Authentication、CredentialsContainer 两个接口，其中 CredentialsContainer 提供了登陆凭证擦除方法。一般登陆成功后，为了防止用户信息泄漏，可以将登陆凭证擦除。</td>
+</tr>
+<tr>
+<td>RememberMeAuthenticationToken</td>
+<td>使用 RememberMe 登陆时，存储登陆信息</td>
+</tr>
+<tr>
+<td>TestingAuthenticationToken</td>
+<td>单元测试时封装的用户对象</td>
+</tr>
+<tr>
+<td>AnonymousAuthenticationToken</td>
+<td>匿名登录时封装用户对象</td>
+</tr>
+<tr>
+<td>RunAsUserToken</td>
+<td>替换验证身份时封装的用户对象</td>
+</tr>
+<tr>
+<td>UsernamePasswordAuthenticationToken</td>
+<td>表单登陆时封装的用户对象</td>
+</tr>
+<tr>
+<td>JaasAuthenticationToken</td>
+<td>JAAS 认证时封装的用户对象</td>
+</tr>
+<tr>
+<td>PreAuthenticatedAuthenticationToken</td>
+<td>Pre-Authentication 场景下封装的用户对象</td>
+</tr>
+</tbody></table>
+<h3><span id="securitycontextholder">SecurityContextHolder</span></h3><p>SecurityContextHolder 中存储的是 SecurityContext，SecurityContext 中存储的是 Authentication。SecurityContext 的存储方式由 SecurityContextHolderStrategy 决定，目前存在三种类型的 SecurityContextHolderStrategy，分别为：</p>
 <ul>
-<li>反应器模式增加了一定的复杂性，因而有一定的门槛，并且不易于调试；</li>
-<li>反应器模式需要操作系统底层的 IO 多路复用的支持，如 Linux 中的 epoll，如果操作系统的底层不支持 IO 多路复用，反应器模式不会有那么高效；</li>
-<li>同一个 Handler 业务线程中，如果出现一个长时间的数据读写，会影响这个反应器中其它通道的 IO 处理。因而，对于这种类型的处理，还需要进一步对反应器模式进行改进。</li>
+<li>ThreadLocalSecurityContextHolderStrategy （默认）</li>
+<li>InheritableThreadLocalSecurityContextHolderStrategy</li>
+<li>GlobalSecurityContextHolderStrategy</li>
 </ul>
-<h1><span id="参考资料">参考资料</span></h1><p>《Netty、Redis、Zookeeper 高并发实战》<br><a target="_blank" rel="noopener" href="https://bbs.huaweicloud.com/blogs/266248?utm_source=zhihu&utm_medium=bbs-ex&utm_campaign=other&utm_content=content">高性能网络框架：Reactor 和 Proactor</a></p>
+<p>还有一个 与SecurityContext 相关的重要过滤器  <code> SecurityContextPersistenceFilter</code>，它的作用是为了存储 SecurityContext 而设计的，主要做两件事情：</p>
+<ul>
+<li>请求来的时候，从 HttpSession 中获取 SecurityContext 并存例入 SecurityContextHolder 中，这样在同一个请求的后续处理过程中，开发者始终可以通过 SecurityContextHolder 获取当前登陆用户信息。</li>
+<li>当一个请求处理完毕时，从 SecurityContextHolder 中获取 SecurityContext 并存入 HttpSession 中（主要针对异步 Servlet），方便下一个请求到来时，再从 HttpSession 中拿出来使用，同时擦除 SecurityContextHolder 中的登陆用户信息。</li>
+</ul>
+<p>上述两部操作均有 <code>SecurityContextRepository</code> 接口完成，它的三个实现类为：</p>
+<ul>
+<li>NullSecurityContextRepository（什么都没做）</li>
+<li>TestSecurityContextRepository（为单元测试提供支持）</li>
+<li>HttpSessionSecurityContextRepository（默认）</li>
+</ul>
+<h2><span id="从当前请求对象中获取">从当前请求对象中获取</span></h2><p>直接在 Controller 的请求参数中放入 Authentication 或 Principal 对象获取，本质上，这些对象都是 HttpServletRequest 带来的（通过 <code>ServletRequestMethodArgumentResolver</code>），在使用了 Spring Security 框架时，HttpServletRequest 的实现类为 <code>Servlet3SecurityContextHolderAwareRequestWrapper</code>。<br>Spring Security 使用 <code>SecurityContextHolderAwareRequestFilter </code>过滤器将默认的请求对象转化为 Servlet3SecurityContextHolderAwareRequestWrapper。</p>
+<h1><span id="定义登陆用户的其它方式">定义登陆用户的其它方式</span></h1><p>Spring Security 支持多种用户定义的方式，其抽象接口为 <code>UserDetailsService</code>，其不同的实现类表示不同的用户定义方式，将配置好的 UserDetailsService 提供给 AuthenticationManagerBuilder，系统再将 UserDetailsService 提供给 AuthenticationProvider 使用。</p>
+<h2><span id="基于内存">基于内存</span></h2><p>我们使用配置文件配置用户时，本质上就是基于内存，对应的实现类为 <code>InMemoryUserDetailsManager</code>。</p>
+<h2><span id="基于-jdbcuserdetailsmanager">基于 JdbcUserDetailsManager</span></h2><p>JdbcUserDetailsManager 支持将用户数据持久化到数据库，同时它还封装类一系列操作用户的方法，例如用户的添加、更新、查找等。<br>Spring Security 中为 <code>JdbcUserDetailsManager</code> 提供了数据库脚本（无法自定义用户表、角色表等，这意味着这种方式的局限性很大），位置在 org/springframework/security/core/userdetails/jdbc/users.ddl。</p>
+<h2><span id="基于-mybatis">基于 MyBatis</span></h2><p>使用 MyBatis 做数据持久化是目前大多数企业应用采用的方案，Spring Security 中结合 MyBatis 可以灵活地定制用户表以及角色表。</p>
 
       
     </div>
@@ -388,7 +437,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://shucunbin.github.io/2020/11/11/Netty%20%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B9%8B%20Reactor%20%E5%8F%8D%E5%BA%94%E5%99%A8%E6%A8%A1%E5%BC%8F/" title="Netty 前置知识点之 Reactor 反应器模式" target="_blank" rel="external">https://shucunbin.github.io/2020/11/11/Netty 前置知识点之 Reactor 反应器模式/</a>
+      <a href="https://shucunbin.github.io/2021/11/13/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E7%99%BB%E9%99%86%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE/" title="Spring Security 学习札记（二）：登陆用户数据" target="_blank" rel="external">https://shucunbin.github.io/2021/11/13/Spring Security 学习札记（二）：登陆用户数据/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -419,13 +468,9 @@
   
   <ul class="pager pull-left">
     
-    <li class="prev">
-      <a href="/2020/11/12/Netty%20%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B9%8B%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6/" title="Netty 前置知识点之事件循环机制"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
-    
     
     <li class="next">
-      <a href="/2019/07/11/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/" title="Java 8 之接口默认方法及静态方法"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/2021/11/12/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" title="Spring Security 学习札记（一）：基本概念"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     
@@ -507,9 +552,9 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
     <script defer>
     var disqus_config = function () {
         
-            this.page.url = 'https://shucunbin.github.io/2020/11/11/Netty%20%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B9%8B%20Reactor%20%E5%8F%8D%E5%BA%94%E5%99%A8%E6%A8%A1%E5%BC%8F/';
+            this.page.url = 'https://shucunbin.github.io/2021/11/13/Spring%20Security%20%E5%AD%A6%E4%B9%A0%E6%9C%AD%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E7%99%BB%E9%99%86%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE/';
         
-        this.page.identifier = 'Netty 前置知识点之 Reactor 反应器模式';
+        this.page.identifier = 'Spring Security 学习札记（二）：登陆用户数据';
     };
     (function() { 
         var d = document, s = d.createElement('script');  
