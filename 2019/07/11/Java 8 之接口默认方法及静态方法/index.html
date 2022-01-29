@@ -17,20 +17,21 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>Hexo</title>
-  <meta name="description" content="[TOC] 概要Java 8 新增了很多语言特性，其中涉及接口的有默认方法、静态方法，这些语言特性旨在帮助编写类库的开发人员，但对我们日常写应用程序的开发人员也同样适用。 静态方法旨在替代常见的伴生类，例如 Collection 类的伴生类 Collections 类、Path 类的半生类 Paths。 默认方法一来解决接口演化问题，二来替代抽象骨干类，例如 Collection 接口的抽象骨干类">
+  <title>Java 8 之接口默认方法及静态方法 | Hexo</title>
+  <meta name="description" content="概要Java 8 新增了很多语言特性，其中涉及接口的有默认方法、静态方法，这些语言特性旨在帮助编写类库的开发人员，但对我们日常写应用程序的开发人员也同样适用。 静态方法旨在替代常见的伴生类，例如 Collection 类的伴生类 Collections 类、Path 类的半生类 Paths。 默认方法一来解决接口演化问题，二来替代抽象骨干类，例如 Collection 接口的抽象骨干类 Abstr">
 <meta property="og:type" content="article">
-<meta property="og:title" content="shucunbin&#39;s blog">
-<meta property="og:url" content="https://shucunbin.github.io/2019/02/15/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:title" content="Java 8 之接口默认方法及静态方法">
+<meta property="og:url" content="https://shucunbin.github.io/2019/07/11/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/index.html">
 <meta property="og:site_name" content="shucunbin&#39;s blog">
-<meta property="og:description" content="[TOC] 概要Java 8 新增了很多语言特性，其中涉及接口的有默认方法、静态方法，这些语言特性旨在帮助编写类库的开发人员，但对我们日常写应用程序的开发人员也同样适用。 静态方法旨在替代常见的伴生类，例如 Collection 类的伴生类 Collections 类、Path 类的半生类 Paths。 默认方法一来解决接口演化问题，二来替代抽象骨干类，例如 Collection 接口的抽象骨干类">
+<meta property="og:description" content="概要Java 8 新增了很多语言特性，其中涉及接口的有默认方法、静态方法，这些语言特性旨在帮助编写类库的开发人员，但对我们日常写应用程序的开发人员也同样适用。 静态方法旨在替代常见的伴生类，例如 Collection 类的伴生类 Collections 类、Path 类的半生类 Paths。 默认方法一来解决接口演化问题，二来替代抽象骨干类，例如 Collection 接口的抽象骨干类 Abstr">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2019-02-15T09:08:29.000Z">
-<meta property="article:modified_time" content="2019-07-09T09:44:17.000Z">
+<meta property="article:published_time" content="2019-07-11T09:44:15.000Z">
+<meta property="article:modified_time" content="2022-01-29T02:18:14.568Z">
 <meta property="article:author" content="shucunbin">
+<meta property="article:tag" content="Java 8">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://shucunbin.github.io/2019/02/15/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/index.html">
+  <link rel="canonical" href="https://shucunbin.github.io/2019/07/11/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/index.html">
   
     <link rel="alternate" href="/atom.xml" title="shucunbin&#39;s blog" type="application/atom+xml">
   
@@ -127,33 +128,8 @@
           </a>
         </li>
         
-        
-        <li class="menu-item menu-item-books">
-          <a href="/books">
-            
-            <i class="icon icon-book-fill"></i>
-            
-            <span class="menu-title">书单</span>
-          </a>
-        </li>
-        
       </ul>
       
-	
-    <ul class="social-links">
-    	
-        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
-        
-        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
-        
-        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
-        
-        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
-        
-        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
-        
-    </ul>
-
     </nav>
   </div>
 </header>
@@ -175,18 +151,39 @@
 
     
       
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java-%E5%9F%BA%E7%A1%80/">Java 基础</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Netty/">Netty</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
 
     
       
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-8/" rel="tag">Java 8</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" rel="tag">线程模型</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
 
     
       
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Java-8/" style="font-size: 13px;">Java 8</a> <a href="/tags/%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" style="font-size: 13px;">线程模型</a>
+    </div>
+  </div>
+
     
       
   <div class="widget">
     <h3 class="widget-title">归档</h3>
     <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -202,13 +199,28 @@
             
             <div class="item-inner">
               <p class="item-category">
-                
+                <a class="category-link" href="/categories/Netty/">Netty</a>
               </p>
               <p class="item-title">
-                <a href="/2019/02/15/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/" class="title">(no title)</a>
+                <a href="/2020/11/11/Reactor%20%E5%8F%8D%E5%BA%94%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="title">Netty 前置知识点之 Reactor 反应器模式</a>
               </p>
               <p class="item-date">
-                <time datetime="2019-02-15T09:08:29.000Z" itemprop="datePublished">2019-02-15</time>
+                <time datetime="2020-11-11T09:44:15.000Z" itemprop="datePublished">2020-11-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java-%E5%9F%BA%E7%A1%80/">Java 基础</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/07/11/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/" class="title">Java 8 之接口默认方法及静态方法</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-07-11T09:44:15.000Z" itemprop="datePublished">2019-07-11</time>
               </p>
             </div>
           </li>
@@ -224,21 +236,48 @@
 
   
   
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">概要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">默认方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">2.1.</span> <span class="toc-text">重写规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">2.2.</span> <span class="toc-text">多重继承问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">静态方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol>
+    </nav>
+  </div>
+</aside>
+
 <main class="main" role="main">
   <div class="content">
   <article id="post-Java 8 之接口默认方法及静态方法" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
       
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Java 8 之接口默认方法及静态方法
+    </h1>
+  
+
+      
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2019/02/15/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/" class="article-date">
-	  <time datetime="2019-02-15T09:08:29.000Z" itemprop="datePublished">2019-02-15</time>
+	<a href="/2019/07/11/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/" class="article-date">
+	  <time datetime="2019-07-11T09:44:15.000Z" itemprop="datePublished">2019-07-11</time>
 	</a>
 </span>
         
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Java-%E5%9F%BA%E7%A1%80/">Java 基础</a>
+  </span>
+
         
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Java-8/" rel="tag">Java 8</a>
+  </span>
+
 
         
 	<span class="article-read hidden-xs">
@@ -249,7 +288,7 @@
 	</span>
 
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/02/15/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/07/11/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/#comments" class="article-comment-link">评论</a></span>
         
 	
 		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.1k(字)</span>
@@ -262,23 +301,22 @@
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>Java 8 新增了很多语言特性，其中涉及接口的有<strong>默认方法</strong>、<strong>静态方法</strong>，这些语言特性旨在帮助编写类库的开发人员，但对我们日常写应用程序的开发人员也同样适用。</p>
+        <h2><span id="概要">概要</span></h2><p>Java 8 新增了很多语言特性，其中涉及接口的有<strong>默认方法</strong>、<strong>静态方法</strong>，这些语言特性旨在帮助编写类库的开发人员，但对我们日常写应用程序的开发人员也同样适用。</p>
 <p>静态方法旨在替代常见的伴生类，例如 Collection 类的伴生类 Collections 类、Path 类的半生类 Paths。</p>
 <p>默认方法一来解决接口演化问题，二来替代抽象骨干类，例如 Collection 接口的抽象骨干类 AbstractCollection 类。</p>
-<h2 id="默认方法"><a href="#默认方法" class="headerlink" title="默认方法"></a>默认方法</h2><p>默认方法，简而言之，就是在一个接口里使用 <code>default </code> 关键字定义的一个方法，所有该接口的实现类都可以直接使用而无须自己实现此方法。</p>
+<h2><span id="默认方法">默认方法</span></h2><p>默认方法，简而言之，就是在一个接口里使用 <code>default </code> 关键字定义的一个方法，所有该接口的实现类都可以直接使用而无须自己实现此方法。</p>
 <p>默认方法存在的主要目的是为了方便扩展已有接口，如果没有默认方法，给一个已经发布的接口添加方法时，所有实现改接口的地方都得做修改，如果该接口的使用范围很广，那相应的影响也非常之大，例如 JDK 里定义的各种接口。因此，Java 8 中加入了此语言特性使得类库设计人员可以很方便的扩展已有的接口。</p>
-<h3 id="重写规则"><a href="#重写规则" class="headerlink" title="重写规则"></a>重写规则</h3><p>实现包含默认方法的接口，有以下三种可能的方式：</p>
+<h3><span id="重写规则">重写规则</span></h3><p>实现包含默认方法的接口，有以下三种可能的方式：</p>
 <ul>
 <li>实现类不重写默认方法，直接使用接口中的默认方法；</li>
 <li>子接口或抽象类将默认方法声明为普通的抽象方法；</li>
 <li>实现类中重写默认方法，与重写普通的接口方法一样。</li>
 </ul>
 <p>如果使用代码片段描述这三种方式则如下所示：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">message</span><span class="params">(String body)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">welcome</span><span class="params">()</span></span>&#123;</span><br><span class="line">        message(<span class="string">&quot;Parent: Hi!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 不对默认方法做任何重写，直接使用</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Child</span> <span class="keyword">implements</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">message</span><span class="params">(String body)</span> </span>&#123;</span><br><span class="line">        System.out.println(body);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 子接口或抽象类重新声明默认方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> BaseParent implements Parent &#123;</span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">welcome</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 实现类重写默认方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Child</span> <span class="keyword">implements</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">message</span><span class="params">(String body)</span> </span>&#123;</span><br><span class="line">        System.out.println(body);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">welcome</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        message(<span class="string">&quot;Child: Hi!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">message</span><span class="params">(String body)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">welcome</span><span class="params">()</span></span>&#123;</span><br><span class="line">        message(<span class="string">&quot;Parent: Hi!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 不对默认方法做任何重写，直接使用</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Child</span> <span class="keyword">implements</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">message</span><span class="params">(String body)</span> </span>&#123;</span><br><span class="line">        System.out.println(body);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 子接口或抽象类重新声明默认方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> BaseParent implements Parent &#123;</span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">welcome</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 实现类重写默认方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Child</span> <span class="keyword">implements</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">message</span><span class="params">(String body)</span> </span>&#123;</span><br><span class="line">        System.out.println(body);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">welcome</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        message(<span class="string">&quot;Child: Hi!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>如果一个复杂的继承体系里，存在多个子类或子接口都重写了默认方法，到底哪个其作用呢？可以使用一句话简单概括其规则：<strong>类中重写的方法胜出。</strong>这样的设计主要是由增加默认方法的目的决定的，增加默认方法主要是为了在接口上向后兼容。让类中重写方法的优先级高于默认方法能简化很多继承问题</p>
-<h3 id="多重继承问题"><a href="#多重继承问题" class="headerlink" title="多重继承问题"></a>多重继承问题</h3><p>接口允许多重继承，因此有可能碰到两个接口包含签名相同的默认方法的情况，如果一个类同时实现这两个接口，它到底该继承哪个接口的呢？</p>
+<h3><span id="多重继承问题">多重继承问题</span></h3><p>接口允许多重继承，因此有可能碰到两个接口包含签名相同的默认方法的情况，如果一个类同时实现这两个接口，它到底该继承哪个接口的呢？</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">default</span> String <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello, Foo!&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Bar</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">default</span> String <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello, Bar!&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FooBar</span> <span class="keyword">implements</span> <span class="title">Foo</span>,<span class="title">Bar</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 编译失败，编译器提示：class FooBar inherits unrelated defaults for hello() from types Foo and Bar.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>解决此问题，我们需要显示的实现或声明 <code>hello()</code> 方法，如下所示：</p>
@@ -286,13 +324,13 @@
 
 
 
-<h2 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h2><p>我们在编程过程中，有时会将创建一些工具类，这些类里包含了大量的静态方法，例如 Objects 类、Collections 类等，这些工具方法，在语义上它们不具体属于某个类。但如果一个方法有充分的语义原因和某个概念相关，那么就应该将该方法和相关的类或接口放在一起，而不是放到另一个工具类中。</p>
+<h2><span id="静态方法">静态方法</span></h2><p>我们在编程过程中，有时会将创建一些工具类，这些类里包含了大量的静态方法，例如 Objects 类、Collections 类等，这些工具方法，在语义上它们不具体属于某个类。但如果一个方法有充分的语义原因和某个概念相关，那么就应该将该方法和相关的类或接口放在一起，而不是放到另一个工具类中。</p>
 <p>例如，Java 8 中引入的 <code>Stream</code> 接口，如果想创建一个由简单值组成的<code>Stream</code>，自然希望<code>Stream</code>接口就有一个这样的方法，而不是使用额外的工具类。这在以前很难达成，直到 Java 8 中为接口加入了静态方法，如下所示：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span>&lt;T&gt; Stream&lt;T&gt; <span class="title">of</span><span class="params">(T... values)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Arrays.stream(values);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html">The Java™ Tutorials - Default Methods</a></p>
+<h2><span id="参考资料">参考资料</span></h2><p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html">The Java™ Tutorials - Default Methods</a></p>
 <p><a target="_blank" rel="noopener" href="http://www.ituring.com.cn/book/1448">Java 8函数式编程</a></p>
 
       
@@ -303,7 +341,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://shucunbin.github.io/2019/02/15/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/" title="" target="_blank" rel="external">https://shucunbin.github.io/2019/02/15/Java 8 之接口默认方法及静态方法/</a>
+      <a href="https://shucunbin.github.io/2019/07/11/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/" title="Java 8 之接口默认方法及静态方法" target="_blank" rel="external">https://shucunbin.github.io/2019/07/11/Java 8 之接口默认方法及静态方法/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -332,6 +370,24 @@
   <nav class="bar bar-footer clearfix" data-stick-bottom>
   <div class="bar-inner">
   
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/11/11/Reactor%20%E5%8F%8D%E5%BA%94%E5%99%A8%E6%A8%A1%E5%BC%8F/" title="Netty 前置知识点之 Reactor 反应器模式"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
   
   
   <div class="bar-right">
@@ -346,21 +402,6 @@
 
   <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
 	
-	
-    <ul class="social-links">
-    	
-        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
-        
-        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
-        
-        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
-        
-        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
-        
-        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
-        
-    </ul>
-
     <div class="copyright">
     	
         <div class="publishby">
@@ -415,7 +456,7 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
     <script defer>
     var disqus_config = function () {
         
-            this.page.url = 'https://shucunbin.github.io/2019/02/15/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/';
+            this.page.url = 'https://shucunbin.github.io/2019/07/11/Java%208%20%E4%B9%8B%E6%8E%A5%E5%8F%A3%E9%BB%98%E8%AE%A4%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95/';
         
         this.page.identifier = 'Java 8 之接口默认方法及静态方法';
     };
